@@ -1,0 +1,3 @@
+[submodule "Lcd4Pi"]
+	path = Lcd4Pi
+	url = git@github.com:marasm/Lcd4Pi.git
