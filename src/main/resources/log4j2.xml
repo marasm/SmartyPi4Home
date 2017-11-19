@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" monitorInterval="30">
+  <Properties>
+    <Property name="app.logger.name">smartyPiLogger</Property>
+    <Property name="app.log.file.name">logs/app.log</Property>
+    <Property name="root.log.file.name">logs/root.log</Property>
+
+    <Property name="console.log.level">debug</Property>
+    <Property name="app.log.level">debug</Property>
+    <Property name="root.log.level">debug</Property>
+
+    <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss,SSS} (%t) %-5level %msg%n</Property>
+    <Property name="log.file.suffix.pattern">-%d{yyyy-MM-dd}.log</Property>
+  </Properties>
+  <Appenders>
+    
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${log.pattern}" />
+    </Console>
+    
+    <RollingFile name="RollingFileApp" fileName="${app.log.file.name}" 
+                 filePattern="${app.log.file.name}${log.file.suffix.pattern}"> 
+      <PatternLayout pattern="${log.pattern}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy max="7"/>
+    </RollingFile>
+    
+    <RollingFile name="RollingFileRoot" fileName="${root.log.file.name}" 
+                 filePattern="${root.log.file.name}${log.file.suffix.pattern}">
+      <PatternLayout pattern="${log.pattern}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+      </Policies>
+      <DefaultRolloverStrategy max="7"/>
+    </RollingFile>
+    
+  </Appenders>
+  
+  <Loggers>
+    <Logger name="${app.logger.name}" level="${app.log.level}" additivity="false">
+      <AppenderRef ref="Console" level="${console.log.level}"/>
+      <AppenderRef ref="RollingFileApp" />
+    </Logger>
+  
+    <Root level="${root.log.level}">
+      <AppenderRef ref="Console" level="${console.log.level}"/>
+      <AppenderRef ref="RollingFileRoot"/>
+    </Root>
+  
+  </Loggers>
+</Configuration>
