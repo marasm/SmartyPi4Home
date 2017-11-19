@@ -5,7 +5,25 @@ repositories {
 }
 
 dependencies {
-  compile 'com.pi4j:pi4j-distribution:1.1'
+  compile 'com.pi4j:pi4j-distribution:1.1',
+          'org.slf4j:slf4j-api:1.7.25',
+          'org.apache.logging.log4j:log4j-slf4j-impl:2.9.1',
+          'org.apache.logging.log4j:log4j-core:2.9.1'
+  
+  
   testCompile 'junit:junit:4.12'
 }
 
+sourceSets{
+  main
+  {
+    java
+    {
+      srcDirs = ['src/main/java','Common/src','Lcd4Pi/src/main/java']
+    }
+    resources
+    {
+      srcDir 'src/main/resources'
+    }
+  }
+}
