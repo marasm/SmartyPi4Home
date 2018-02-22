@@ -44,6 +44,10 @@ public class SmartyPi4Home
       GpioPinListenerDigital rxStateChangeListener = e -> 
           System.out.println("Pin 27 State changed: " + e.getState().getValue());
       rxDataPin.addListener( rxStateChangeListener );
+      while(true)
+      {
+        Thread.sleep(100);
+      }
       
     }
     catch (Exception e)
