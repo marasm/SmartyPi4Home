@@ -25,7 +25,7 @@ public class SmartyPi4Home
     AppLogger.initLogger("smartyPiLogger");
     AppLogger.debug("Starting SmartyPi4Home");
     
-    LCD lcd = null;
+    LCD lcd;
     try
     {
       lcd = LCD.getInstance();
@@ -33,22 +33,25 @@ public class SmartyPi4Home
       lcd.setText("SmartyPi4Home\nv0.1");
       
       ButtonPressedObserver buttonHandler = new ButtonPressedObserver(lcd);
-      buttonHandler.addButtonListener(button -> 
+      Thread buttonCheckerThread = buttonHandler.addButtonListener(button -> 
         System.out.println("Button: " + button.getPin()));
-      
       
       GpioController gpio = GpioFactory.getInstance(); 
       
       GpioPinDigitalInput rxDataPin = 
         gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
-      GpioPinListenerDigital rxStateChangeListener = e -> 
+      GpioPinListenerDigital rxStateChangeListener = 
+        e -> 
           System.out.println("Pin 27 State changed: " + e.getState().getValue());
       rxDataPin.addListener( rxStateChangeListener );
-      while(true)
-      {
-        Thread.sleep(100);
-      }
       
+      //TODO tx GPIO == 00
+      
+      Runtime.getRuntime().addShutdownHook(
+        new Thread(() -> {System.out.println("Shutting down..." + lcd);}));
+      
+      //wait 
+      buttonCheckerThread.join();
     }
     catch (Exception e)
     {
