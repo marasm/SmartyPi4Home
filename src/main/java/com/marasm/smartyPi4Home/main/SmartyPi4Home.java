@@ -40,7 +40,7 @@ public class SmartyPi4Home
       GpioController gpio = GpioFactory.getInstance(); 
       
       GpioPinDigitalInput rxDataPin = 
-        gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, PinPullResistance.PULL_DOWN);
+        gpio.provisionDigitalInputPin(RaspiPin.GPIO_13, PinPullResistance.PULL_DOWN);
       GpioPinListenerDigital rxStateChangeListener = e -> 
           System.out.println("Pin 27 State changed: " + e.getState().getValue());
       rxDataPin.addListener( rxStateChangeListener );
