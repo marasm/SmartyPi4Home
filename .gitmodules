@@ -1,6 +1,6 @@
 [submodule "Lcd4Pi"]
 	path = Lcd4Pi
-	url = https://github.com/marasm/Lcd4Pi.git
+	url = git@github.com:marasm/Lcd4Pi.git
 [submodule "Common"]
 	path = Common
-	url = https://github.com/marasm/Common.git
+	url = git@github.com:marasm/Common.git
