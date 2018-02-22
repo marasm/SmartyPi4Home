@@ -25,9 +25,10 @@ public class SmartyPi4Home
     AppLogger.initLogger("smartyPiLogger");
     AppLogger.debug("Starting SmartyPi4Home");
     
+    LCD lcd = null;
     try
     {
-      LCD lcd = LCD.getInstance();
+      lcd = LCD.getInstance();
       lcd.clear();
       lcd.setText("SmartyPi4Home\nv0.1");
       

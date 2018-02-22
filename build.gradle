@@ -3,6 +3,12 @@ apply plugin: 'eclipse'
 
 repositories {
     jcenter()
+    maven{
+      name "oss-snapshots"
+      url "https://oss.sonatype.org/content/groups/public"
+      
+    }
+    
 }
 
 allprojects
@@ -17,7 +23,7 @@ task execute(type:JavaExec) {
 }
 
 dependencies {
-  compile 'com.pi4j:pi4j-distribution:1.1',
+  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT',
           'org.slf4j:slf4j-api:1.7.25',
           'org.apache.logging.log4j:log4j-slf4j-impl:2.9.1',
           'org.apache.logging.log4j:log4j-core:2.9.1',
