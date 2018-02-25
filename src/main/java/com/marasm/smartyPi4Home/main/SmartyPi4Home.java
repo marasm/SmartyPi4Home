@@ -4,10 +4,15 @@
 package com.marasm.smartyPi4Home.main;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.marasm.lcd4pi.ButtonPressedObserver;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
+import com.marasm.smartyPi4Home.menu.MenuController;
+import com.marasm.smartyPi4Home.rfdevice.Protocol;
+import com.marasm.smartyPi4Home.rfdevice.RfTransmitter;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -21,8 +26,18 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  */
 public class SmartyPi4Home
 {
+  private static final List<Integer> deviceCodes = Arrays.asList(
+    4527411,
+    4527420,
+    4527555,
+    4527564,
+    4527875,
+    4527884);
+  
   
   private static LCD lcd;
+  
+  private static RfTransmitter transmitter;
 
   public static void main(String[] args) throws IOException, InterruptedException 
   {
@@ -32,24 +47,28 @@ public class SmartyPi4Home
     try
     {
       lcd = LCD.getInstance();
-      lcd.clear();
-      lcd.setText("SmartyPi4Home\nv0.1");
-      Thread.sleep(1000);
-      
+      MenuController menuCtrl = new MenuController(lcd);
       ButtonPressedObserver buttonHandler = new ButtonPressedObserver(lcd);
-      Thread buttonCheckerThread = buttonHandler.addButtonListener(button -> 
-      System.out.println("Button: " + button.getPin()));
+      Thread buttonCheckerThread = buttonHandler.addButtonListener(
+        button -> menuCtrl.handleButtonEvents(button));
       
-      GpioController gpio = GpioFactory.getInstance(); 
-      
-      GpioPinDigitalInput rxDataPin = 
-        gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
-      GpioPinListenerDigital rxStateChangeListener = 
-        e -> 
-      System.out.println("Pin 27 State changed: " + e.getState().getValue());
-      rxDataPin.addListener( rxStateChangeListener );
+//      GpioController gpio = GpioFactory.getInstance(); 
+//      
+//      GpioPinDigitalInput rxDataPin = 
+//        gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
+//      GpioPinListenerDigital rxStateChangeListener = 
+//        e -> 
+//      System.out.println("Pin 27 State changed: " + e.getState().getValue());
+//      rxDataPin.addListener( rxStateChangeListener );
       
       //TODO tx GPIO == 00
+      transmitter = new RfTransmitter(Protocol.ONE);
+      for (Integer code: deviceCodes)
+      {
+        transmitter.sendCode(code.intValue());
+        Thread.sleep(2000);
+      }
+      
       
       Runtime.getRuntime().addShutdownHook(
         new Thread(() -> 
