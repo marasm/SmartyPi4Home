@@ -26,6 +26,7 @@ public class RfTransmitter
     for (int i = 0; i < binStr.length(); i++)
     {
       sendBit(protocol, binStr.charAt(i) == '1');
+      System.out.println("sent bit: " + (binStr.charAt(i) == '1' ? "1" : "0"));
     }
     
     sendSync(protocol);
