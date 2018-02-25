@@ -21,15 +21,29 @@ public class RfTransmitter
 
   public void sendCode(int inCode)
   {
-    String binStr = Integer.toBinaryString(inCode);
+    String binStr = padBinaryStringWithZeroes(Integer.toBinaryString(inCode), 24); //bin string must be 24 bits
     
-    for (int i = 0; i < binStr.length(); i++)
+    for (char bit : binStr.toCharArray())
     {
-      sendBit(protocol, binStr.charAt(i) == '1');
-      System.out.println("sent bit: " + (binStr.charAt(i) == '1' ? "1" : "0"));
+      sendBit(protocol, bit == '1');
     }
     
     sendSync(protocol);
+  }
+  
+  private String padBinaryStringWithZeroes(String inBinString, int inRequiredMinLength)
+  {
+    if (inBinString.length() >= inRequiredMinLength)
+      return inBinString;
+    else
+    {
+      String paddedStr = inBinString;
+      for (int i = inBinString.length(); i < inRequiredMinLength; i++)
+      {
+        paddedStr += "0";
+      }
+      return paddedStr;
+    }
   }
    
   private void sendSync(Protocol inProtocol)
