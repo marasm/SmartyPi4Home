@@ -21,7 +21,7 @@ public class RfTransmitter
 
   public void sendCode(int inCode)
   {
-    String binStr = padBinaryStringWithZeroes(Integer.toBinaryString(inCode), 24); //bin string must be 24 bits
+    String binStr = leftPadBinaryStringWithZeroes(Integer.toBinaryString(inCode), 24); 
     
     for (char bit : binStr.toCharArray())
     {
@@ -31,18 +31,18 @@ public class RfTransmitter
     sendSync(protocol);
   }
   
-  private String padBinaryStringWithZeroes(String inBinString, int inRequiredMinLength)
+  private String leftPadBinaryStringWithZeroes(String inBinString, int inRequiredMinLength)
   {
     if (inBinString.length() >= inRequiredMinLength)
       return inBinString;
     else
     {
-      String paddedStr = inBinString;
+      String paddedStr = "";
       for (int i = inBinString.length(); i < inRequiredMinLength; i++)
       {
         paddedStr += "0";
       }
-      return paddedStr;
+      return paddedStr += inBinString;
     }
   }
    
