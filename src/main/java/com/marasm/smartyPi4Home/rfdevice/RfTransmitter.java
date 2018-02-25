@@ -3,7 +3,9 @@
  */
 package com.marasm.smartyPi4Home.rfdevice;
 
+import com.marasm.logger.AppLogger;
 import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.GpioUtil;
 
 /**
  * @author mkorotkovas
@@ -17,6 +19,14 @@ public class RfTransmitter
   {
     super();
     protocol = inProtocol;
+    
+    if (Gpio.wiringPiSetup() == -1) 
+    {
+      AppLogger.error(" ==>> GPIO setup failed for transmitter");
+      return;
+    }
+    GpioUtil.export(0, GpioUtil.DIRECTION_OUT);
+    Gpio.pinMode(0, Gpio.OUTPUT);
   }
 
   public void sendCode(int inCode)
