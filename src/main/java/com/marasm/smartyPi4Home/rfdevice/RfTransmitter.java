@@ -13,7 +13,11 @@ import com.pi4j.wiringpi.GpioUtil;
  */
 public class RfTransmitter
 {
+  private static final int OUTPUT_PIN = 0;
+  
   private final Protocol protocol;
+  
+  
   
   public RfTransmitter(Protocol inProtocol)
   {
@@ -25,8 +29,8 @@ public class RfTransmitter
       AppLogger.error(" ==>> GPIO setup failed for transmitter");
       return;
     }
-    GpioUtil.export(0, GpioUtil.DIRECTION_OUT);
-    Gpio.pinMode(0, Gpio.OUTPUT);
+    GpioUtil.export(OUTPUT_PIN, GpioUtil.DIRECTION_OUT);
+    Gpio.pinMode(OUTPUT_PIN, Gpio.OUTPUT);
   }
 
   public void sendCode(int inCode)
@@ -82,9 +86,9 @@ public class RfTransmitter
 
   private void transmit(int inPulseLength, int nHighPulses, int nLowPulses)
   {
-    Gpio.digitalWrite(0, 1);
+    Gpio.digitalWrite(OUTPUT_PIN, 1);
     Gpio.delayMicroseconds(inPulseLength * nHighPulses);
-    Gpio.digitalWrite(0, 0);
+    Gpio.digitalWrite(OUTPUT_PIN, 0);
     Gpio.delayMicroseconds(inPulseLength * nLowPulses);
   }
 }

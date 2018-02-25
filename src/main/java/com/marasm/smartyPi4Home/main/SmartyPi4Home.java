@@ -27,12 +27,8 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 public class SmartyPi4Home
 {
   private static final List<Integer> deviceCodes = Arrays.asList(
-    4527411,
-    4527420,
     4527555,
-    4527564,
-    4527875,
-    4527884);
+    4527564);
   
   
   private static LCD lcd;
