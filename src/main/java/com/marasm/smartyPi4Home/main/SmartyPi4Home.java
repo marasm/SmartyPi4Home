@@ -61,13 +61,6 @@ public class SmartyPi4Home
 //      System.out.println("Pin 27 State changed: " + e.getState().getValue());
 //      rxDataPin.addListener( rxStateChangeListener );
       
-      //TODO tx GPIO == 00
-      transmitter = new RfTransmitter(Protocol.ONE);
-      for (Integer code: deviceCodes)
-      {
-        transmitter.sendCode(code.intValue());
-        Thread.sleep(2000);
-      }
       
       
       Runtime.getRuntime().addShutdownHook(
@@ -79,7 +72,18 @@ public class SmartyPi4Home
         ));
       
       //wait 
-      buttonCheckerThread.join();
+      //buttonCheckerThread.join();
+      
+      //TODO tx GPIO == 00
+      transmitter = new RfTransmitter(Protocol.ONE);
+
+      while(true)
+        for (Integer code: deviceCodes)
+        {
+          AppLogger.debug("Sending Code " + code + "...");
+          transmitter.sendCode(code.intValue());
+          Thread.sleep(2000);
+        }
     }
     catch (Exception e)
     {
