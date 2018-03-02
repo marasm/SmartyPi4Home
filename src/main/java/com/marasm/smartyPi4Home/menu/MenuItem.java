@@ -11,18 +11,16 @@ import java.util.List;
  */
 public class MenuItem
 {
-  private final String id;
   private final MenuItemSelectionHandler selectionHandler;
   private String text;
   private final List<MenuItem> childItems;
   
   
   
-  public MenuItem(String inId, String inText,  MenuItemSelectionHandler inSelectionHandler,
+  public MenuItem( String inText,  MenuItemSelectionHandler inSelectionHandler,
     List<MenuItem> inChildItems)
   {
     super();
-    id = inId;
     selectionHandler = inSelectionHandler;
     text = inText;
     childItems = inChildItems;
@@ -48,8 +46,4 @@ public class MenuItem
     return childItems;
   }
 
-  public String getId()
-  {
-    return id;
-  }
 }

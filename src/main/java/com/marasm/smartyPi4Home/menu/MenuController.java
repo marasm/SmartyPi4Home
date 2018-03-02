@@ -4,15 +4,12 @@
 package com.marasm.smartyPi4Home.menu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.marasm.lcd4pi.Button;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
-import com.marasm.smartyPi4Home.rfdevice.RfOutlet;
 
 /**
  * @author mkorotkovas
@@ -22,7 +19,6 @@ public class MenuController
 {
   private final LCD lcd;
   private final DeviceController deviceController;
-  private Map<String, MenuItem> mainMenu = new HashMap<>();
   
   private MenuItem curMenuItem;
   private List<MenuItem> curSiblingItems;
@@ -33,7 +29,7 @@ public class MenuController
     deviceController = inDeviceController;
     curSiblingItems = new ArrayList<>();
     
-    mainMenu.put("0", new MenuItem("0", "SmartyPi4Home\nv0.1",
+    curSiblingItems.add(new MenuItem("SmartyPi4Home\nv0.1",
       () -> 
         {
           lcd.setText("SmartyPi4Home\nStatus: OK");
@@ -42,13 +38,11 @@ public class MenuController
         }, 
       null));
     
-    mainMenu.put("1", new MenuItem("1", "Device Control",
+    curSiblingItems.add(new MenuItem("Device Control",
       () -> showChildMenu4CurItem(),
-      createMenuItemsFromAvailableDevices("10", deviceController)));
+      createMenuItemsFromAvailableDevices( deviceController)));
     
-    curMenuItem = mainMenu.get("0");
-    curSiblingItems.add(mainMenu.get("0"));
-    curSiblingItems.add(mainMenu.get("1"));
+    curMenuItem = curSiblingItems.get(0);
     
     showCurMenuItem();
   }
@@ -136,15 +130,14 @@ public class MenuController
     }
   }
 
-  private List<MenuItem> createMenuItemsFromAvailableDevices(String inStartMenuItemId, 
+  private List<MenuItem> createMenuItemsFromAvailableDevices(
     DeviceController inDevController)
   {
     List<MenuItem> deviceMenuItems = new ArrayList<>();
     
-    int id = Integer.parseInt(inStartMenuItemId);
-    for (RfOutlet device : inDevController.getAllAvailableDevices())
+    inDevController.getAllAvailableDevices().forEach( (device) -> 
     {
-      deviceMenuItems.add(new MenuItem(String.valueOf(id++), device.getName(), 
+      deviceMenuItems.add(new MenuItem( device.getName(), 
         () -> 
           {
             lcd.clear();
@@ -160,7 +153,7 @@ public class MenuController
             }
           }, 
         null));
-    }
+    });
     return deviceMenuItems;
   }
 

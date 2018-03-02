@@ -42,6 +42,7 @@ public class SmartyPi4Home
         new Thread(() -> 
         {
           System.out.println("Shutting down...");
+          lcd.clear();
           lcd.stop();
         }
         ));
