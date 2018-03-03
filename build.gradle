@@ -1,6 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+
+def getAppVersion = { ->
+  Properties props = new Properties()
+  props.load(new FileInputStream("src/main/resources/app.properties"))
+  return props.appVersion
+}
+
 repositories {
     jcenter()
     maven{
@@ -48,5 +55,5 @@ sourceSets{
 }
 
 jar {
-  archiveName = "smartyPi4Home.jar"
+  archiveName = "smartyPi4Home-" + getAppVersion + ".jar"
 }

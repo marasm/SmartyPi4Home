@@ -3,6 +3,7 @@
  */
 package com.marasm.smartyPi4Home.menu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.marasm.lcd4pi.Button;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
+import com.marasm.smartyPi4Home.util.AppProperties;
 
 /**
  * @author mkorotkovas
@@ -22,14 +24,18 @@ public class MenuController
   
   private MenuItem curMenuItem;
   private List<MenuItem> curSiblingItems;
+  private List<MenuItem> parentMenuItems;
   
-  public MenuController(LCD inLcd, DeviceController inDeviceController) throws InterruptedException
+  public MenuController(LCD inLcd, DeviceController inDeviceController) 
+    throws InterruptedException, IOException
   {
     lcd = inLcd;
     deviceController = inDeviceController;
     curSiblingItems = new ArrayList<>();
+    parentMenuItems = new ArrayList<>();
+    String appVersion = AppProperties.getProperty(AppProperties.APP_VERSION_PROP);
     
-    curSiblingItems.add(new MenuItem("SmartyPi4Home\nv0.1",
+    curSiblingItems.add(new MenuItem("SmartyPi4Home\nv" + appVersion,
       () -> 
         {
           lcd.setText("SmartyPi4Home\nStatus: OK");
@@ -56,9 +62,10 @@ public class MenuController
         selectCurMenuItem();
         break;
       case LEFT:
-        
+        showParentMenu();
         break;
       case RIGHT:
+        selectCurMenuItem();
         break;
       case UP:
         showPreviousSiblingItem();
@@ -72,6 +79,17 @@ public class MenuController
     }
   }
   
+  private void showParentMenu()
+  {
+    if (parentMenuItems != null && !parentMenuItems.isEmpty())
+    {
+      curSiblingItems = parentMenuItems;
+      curMenuItem = curSiblingItems.get(0);
+      showCurMenuItem();
+    }
+    
+  }
+
   private void showPreviousSiblingItem()
   {
     int indexOfCurItem = curSiblingItems.indexOf(curMenuItem);
@@ -124,6 +142,7 @@ public class MenuController
   {
     if (curMenuItem.getChildItems() != null && !curMenuItem.getChildItems().isEmpty())
     {
+      parentMenuItems = curSiblingItems;
       curSiblingItems = curMenuItem.getChildItems();
       curMenuItem = curMenuItem.getChildItems().get(0);
       showCurMenuItem();
