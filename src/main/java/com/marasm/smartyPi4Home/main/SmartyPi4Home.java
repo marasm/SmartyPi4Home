@@ -8,6 +8,7 @@ import java.io.IOException;
 import com.marasm.lcd4pi.ButtonPressedObserver;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
+import com.marasm.smartyPi4Home.aws.AwsDeviceController;
 import com.marasm.smartyPi4Home.menu.MenuController;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
 import com.marasm.smartyPi4Home.rfdevice.RfTransmitter;
@@ -19,6 +20,7 @@ import com.marasm.smartyPi4Home.rfdevice.RfTransmitter;
 public class SmartyPi4Home
 {
   private static LCD lcd;
+  private static AwsDeviceController awsDeviceController;
   
 
   public static void main(String[] args) throws IOException, InterruptedException 
@@ -29,14 +31,20 @@ public class SmartyPi4Home
     try
     {
       lcd = LCD.getInstance();
+      
       RfTransmitter transmitter = new RfTransmitter();
       DeviceController deviceController = new DeviceController(transmitter);
+      
+      lcd.clear();
+      lcd.setText("Connecting to\nAWS...");
+      
+      awsDeviceController = new AwsDeviceController();
+      awsDeviceController.connectPhysicalDevices(deviceController);
+      
       MenuController menuCtrl = new MenuController(lcd, deviceController);
       ButtonPressedObserver buttonHandler = new ButtonPressedObserver(lcd);
       Thread buttonCheckerThread = buttonHandler.addButtonListener(
         button -> menuCtrl.handleButtonEvents(button));
-      
-      
       
       Runtime.getRuntime().addShutdownHook(
         new Thread(() -> 
@@ -44,6 +52,7 @@ public class SmartyPi4Home
           System.out.println("Shutting down...");
           lcd.clear();
           lcd.stop();
+          awsDeviceController.diconnect();
         }
         ));
       
@@ -63,6 +72,7 @@ public class SmartyPi4Home
     }
     finally
     {
+      awsDeviceController.diconnect();
       lcd.stop();
     }
   }

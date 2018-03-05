@@ -11,6 +11,7 @@ import com.marasm.lcd4pi.Button;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
+import com.marasm.smartyPi4Home.types.DeviceStatus;
 import com.marasm.smartyPi4Home.util.AppProperties;
 
 /**
@@ -160,14 +161,16 @@ public class MenuController
         () -> 
           {
             lcd.clear();
-            if (device.getIsOn())
+            if (device.getStatus() == DeviceStatus.ON)
             { 
-              inDevController.turnDeviceOff(device);
+              device.setStatus(DeviceStatus.OFF);
+              inDevController.updatedPhysicalDeviceState(device);
               lcd.setText(device.getName() + "\nOff");
             }
             else
             {
-              inDevController.turnDeviceOn(device);
+              device.setStatus(DeviceStatus.ON);
+              inDevController.updatedPhysicalDeviceState(device);
               lcd.setText(device.getName() + "\n On");
             }
           }, 

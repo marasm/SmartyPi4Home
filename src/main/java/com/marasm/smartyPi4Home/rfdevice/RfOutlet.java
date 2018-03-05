@@ -3,6 +3,11 @@
  */
 package com.marasm.smartyPi4Home.rfdevice;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.marasm.smartyPi4Home.types.DeviceStatus;
+
 /**
  * @author mkorotkovas
  *
@@ -15,8 +20,8 @@ public class RfOutlet implements Comparable<RfOutlet>
   private final int onCode;
   private final int offCode;
   
-  private boolean isOn;
-  
+  private DeviceStatus status = DeviceStatus.OFF;
+  private List<DeviceUpdateListener> deviceUpdateListeners; 
   
   public RfOutlet(String inId, String inName, Protocol inProtocol, int inOnCode, int inOffCode)
   {
@@ -26,9 +31,14 @@ public class RfOutlet implements Comparable<RfOutlet>
     protocol = inProtocol;
     onCode = inOnCode;
     offCode = inOffCode;
+    deviceUpdateListeners = new ArrayList<>();
   }
 
-
+  public void addDeviceUpdateListener(DeviceUpdateListener inListener)
+  {
+    deviceUpdateListeners.add(inListener);
+  }
+  
   public String getId()
   {
     return id;
@@ -59,23 +69,40 @@ public class RfOutlet implements Comparable<RfOutlet>
   }
 
 
-  public boolean getIsOn()
-  {
-    return isOn;
-  }
-
-
-  public void setIsOn(boolean inIsOn)
-  {
-    isOn = inIsOn;
-  }
-
-
   @Override
   public int compareTo(RfOutlet inOutlet)
   {
     return id.compareTo(inOutlet.getId());
   }
+
+
+  public DeviceStatus getStatus()
+  {
+    return status;
+  }
+
+  
+  public void setStatus(DeviceStatus inStatus)
+  {
+    if (inStatus != status)
+    {
+      status = inStatus;
+      notifyUpdateListeners();
+    }
+  }
+
+  public void setStatusNoNotification(DeviceStatus inStatus)
+  {
+    status = inStatus;
+  }
+
+
+  private void notifyUpdateListeners()
+  {
+    deviceUpdateListeners.forEach(l -> l.onPhysicalDeviceUpdate(this));
+  }
+  
+  
   
   
 }
