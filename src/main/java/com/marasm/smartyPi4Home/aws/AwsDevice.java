@@ -72,13 +72,10 @@ public class AwsDevice extends AWSIotDevice
 
   public void setStatus(DeviceStatus inStatus)
   {
-    AppLogger.debug("SetStatus called. instatus=" + inStatus + ", Status=" + status);
     if (inStatus != status)
     {
-      AppLogger.debug("Updating status");
       status = inStatus;
       notifyUpdateListeners();
-      AppLogger.debug("Fired off notifications");
     }
   }
 
