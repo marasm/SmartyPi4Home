@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.types.DeviceStatus;
 
 /**
@@ -29,9 +28,9 @@ public class DeviceController
     allAvailableDevices.add(new RfOutlet("office-outlet-2", "Office #2", Protocol.ONE, 4527555, 4527564));
     allAvailableDevices.add(new RfOutlet("office-outlet-3", "Office #3", Protocol.ONE, 4527875, 4527884));
                         
-    allAvailableDevices.add(new RfOutlet("b1", "Bedroom #1", Protocol.ONE, 5526835, 5526844));
-    allAvailableDevices.add(new RfOutlet("b2", "Bedroom #2", Protocol.ONE, 5526979, 5526988));
-    allAvailableDevices.add(new RfOutlet("b3", "Bedroom #3", Protocol.ONE, 5527299, 5527308));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-1", "Bedroom #1", Protocol.ONE, 5526835, 5526844));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-2", "Bedroom #2", Protocol.ONE, 5526979, 5526988));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-3", "Bedroom #3", Protocol.ONE, 5527299, 5527308));
   }
 
   public List<RfOutlet> getAllAvailableDevices()
@@ -51,22 +50,15 @@ public class DeviceController
   
   public synchronized void updatedPhysicalDeviceState(RfOutlet inDevice)  
   {
-      if (inDevice.getStatus() == DeviceStatus.ON)
-      {
-        transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
-      }
-      else
-      {
-        transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
-      }
-      try
-      {
-        Thread.sleep(500);
-      }
-      catch (InterruptedException e)
-      {
-        AppLogger.error("Error sleeping thread", e);
-      }
+    if (inDevice.getStatus() == DeviceStatus.ON)
+    {
+      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
+    }
+    else
+    {
+      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
+    }
+    
   }
   
   

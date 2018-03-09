@@ -6,6 +6,7 @@ package com.marasm.smartyPi4Home.rfdevice;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.marasm.logger.AppLogger;
 
@@ -15,6 +16,8 @@ import com.marasm.logger.AppLogger;
  */
 public class RfTransmitter
 {
+  
+  private static final int NUM_OF_TIMES_TO_SEND_CODE = 5;
   
   private final Runtime runtime;
   
@@ -28,29 +31,33 @@ public class RfTransmitter
 
   public void sendCode(Protocol inProtocol, int inCode) 
   {
-    try
+    IntStream.range(0, NUM_OF_TIMES_TO_SEND_CODE).forEach(i ->
     {
-      Process process = runtime.exec("rfoutlet/codesend -l " + inProtocol.getPulseLength() + " " + inCode);
-      String stdOutput = new BufferedReader(new InputStreamReader(process.getInputStream()))
-        .lines().collect(Collectors.joining("\n"));
-      String errOutput = new BufferedReader(new InputStreamReader(process.getErrorStream()))
-        .lines().collect(Collectors.joining("\n"));
-      
-      int retCode = process.waitFor();
-      if (retCode != 0)
+      try
       {
-        AppLogger.error("Process failed with return code of: " + retCode);
-        AppLogger.error("Process output: " + errOutput);
+        Process process = runtime.exec("rfoutlet/codesend -l " + inProtocol.getPulseLength() + " " + inCode);
+        String stdOutput = new BufferedReader(new InputStreamReader(process.getInputStream()))
+          .lines().collect(Collectors.joining("\n"));
+        String errOutput = new BufferedReader(new InputStreamReader(process.getErrorStream()))
+          .lines().collect(Collectors.joining("\n"));
+        
+        int retCode = process.waitFor();
+        if (retCode != 0)
+        {
+          AppLogger.error("Process failed with return code of: " + retCode);
+          AppLogger.error("Process output: " + errOutput);
+        }
+        else
+        {
+          AppLogger.debug("Process output: " + stdOutput);
+        }
+        Thread.sleep(100);
       }
-      else
+      catch(Exception e)
       {
-        AppLogger.debug("Process output: " + stdOutput);
+        throw new RuntimeException(e);
       }
-    }
-    catch(Exception e)
-    {
-      throw new RuntimeException(e);
-    }
+    });
   }
   
 }
