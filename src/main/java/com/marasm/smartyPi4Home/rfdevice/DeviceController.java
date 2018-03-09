@@ -50,13 +50,16 @@ public class DeviceController
   
   public void updatedPhysicalDeviceState(RfOutlet inDevice)  
   {
-    if (inDevice.getStatus() == DeviceStatus.ON)
+    synchronized (transmitter)
     {
-      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
-    }
-    else
-    {
-      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
+      if (inDevice.getStatus() == DeviceStatus.ON)
+      {
+        transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
+      }
+      else
+      {
+        transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
+      }
     }
   }
   
