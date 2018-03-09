@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.types.DeviceStatus;
 
 /**
@@ -48,10 +49,8 @@ public class DeviceController
       .get();
   }
   
-  public void updatedPhysicalDeviceState(RfOutlet inDevice)  
+  public synchronized void updatedPhysicalDeviceState(RfOutlet inDevice)  
   {
-    synchronized (transmitter)
-    {
       if (inDevice.getStatus() == DeviceStatus.ON)
       {
         transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
@@ -60,7 +59,14 @@ public class DeviceController
       {
         transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
       }
-    }
+      try
+      {
+        Thread.sleep(500);
+      }
+      catch (InterruptedException e)
+      {
+        AppLogger.error("Error sleeping thread", e);
+      }
   }
   
   
