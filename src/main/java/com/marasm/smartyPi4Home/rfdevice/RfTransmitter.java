@@ -17,7 +17,7 @@ import com.marasm.logger.AppLogger;
 public class RfTransmitter
 {
   
-  private static final int NUM_OF_TIMES_TO_SEND_CODE = 5;
+  private static final int NUM_OF_TIMES_TO_SEND_CODE = 4;
   
   private final Runtime runtime;
   
@@ -51,7 +51,7 @@ public class RfTransmitter
         {
           AppLogger.debug("Process output: " + stdOutput);
         }
-        Thread.sleep(100);
+        Thread.sleep(50);
       }
       catch(Exception e)
       {
