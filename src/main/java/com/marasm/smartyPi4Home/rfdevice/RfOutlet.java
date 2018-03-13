@@ -84,11 +84,8 @@ public class RfOutlet implements Comparable<RfOutlet>
   
   public void setStatus(DeviceStatus inStatus)
   {
-    if (inStatus != status)
-    {
-      status = inStatus;
-      notifyUpdateListeners();
-    }
+    status = inStatus;
+    notifyUpdateListeners();
   }
 
   public void setStatusNoNotification(DeviceStatus inStatus)
