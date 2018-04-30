@@ -24,13 +24,13 @@ public class DeviceController
     super();
     transmitter = inTransmitter;
 
-    allAvailableDevices.add(new RfOutlet("office-outlet-1", "Office #1", Protocol.ONE, 4527411, 4527420));
-    allAvailableDevices.add(new RfOutlet("office-outlet-2", "Office #2", Protocol.ONE, 4527555, 4527564));
-    allAvailableDevices.add(new RfOutlet("office-outlet-3", "Office #3", Protocol.ONE, 4527875, 4527884));
+    allAvailableDevices.add(new RfOutlet("office-outlet-1",   "Office #1", Protocol.ONE, 5526835, 5526844));
+    allAvailableDevices.add(new RfOutlet("office-outlet-2",   "Office #2", Protocol.ONE, 5526979, 5526988));
+    allAvailableDevices.add(new RfOutlet("office-outlet-3",   "Office #3", Protocol.ONE, 5527299, 5527308));
                         
-    allAvailableDevices.add(new RfOutlet("bedroom-outlet-1", "Bedroom #1", Protocol.ONE, 5526835, 5526844));
-    allAvailableDevices.add(new RfOutlet("bedroom-outlet-2", "Bedroom #2", Protocol.ONE, 5526979, 5526988));
-    allAvailableDevices.add(new RfOutlet("bedroom-outlet-3", "Bedroom #3", Protocol.ONE, 5527299, 5527308));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-1", "Bedroom #1", Protocol.ONE, 4527411, 4527420));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-2", "Bedroom #2", Protocol.ONE, 4527555, 4527564));
+    allAvailableDevices.add(new RfOutlet("bedroom-outlet-3", "Bedroom #3", Protocol.ONE, 4527875, 4527884));
   }
 
   public List<RfOutlet> getAllAvailableDevices()
