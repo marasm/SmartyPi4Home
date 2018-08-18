@@ -12,7 +12,7 @@ import com.marasm.smartyPi4Home.types.DeviceStatus;
  * @author mkorotkovas
  *
  */
-public abstract class GenericRfDevice
+public abstract class GenericRfDevice implements Comparable<GenericRfDevice> 
 {
 
   protected final String id;
@@ -72,6 +72,12 @@ public abstract class GenericRfDevice
   private void notifyUpdateListeners()
   {
     deviceUpdateListeners.forEach(listener -> listener.onPhysicalDeviceUpdate(this));
+  }
+  
+  @Override
+  public int compareTo(GenericRfDevice inOutlet)
+  {
+    return id.compareTo(inOutlet.getId());
   }
   
   

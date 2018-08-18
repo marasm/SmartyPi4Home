@@ -7,7 +7,7 @@ package com.marasm.smartyPi4Home.rfdevice;
  * @author mkorotkovas
  *
  */
-public class RfOutlet extends GenericRfDevice implements Comparable<RfOutlet> 
+public class RfOutlet extends GenericRfDevice 
 {
   private final int onCode;
   private final int offCode;
@@ -33,17 +33,4 @@ public class RfOutlet extends GenericRfDevice implements Comparable<RfOutlet>
 
 
 
-  @Override
-  public int compareTo(RfOutlet inOutlet)
-  {
-    return id.compareTo(inOutlet.getId());
-  }
-
-
- 
-
- 
-  
-  
-  
 }

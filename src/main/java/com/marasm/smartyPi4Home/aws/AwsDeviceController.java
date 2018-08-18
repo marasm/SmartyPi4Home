@@ -105,7 +105,7 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     }
     try
     {
-      RfOutlet device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
+      GenericRfDevice device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
       device.setStatusNoNotification(inAwsDevice.getStatus());
       physicalDeviceController.updatedPhysicalDeviceState(device);
       inAwsDevice.updateReportedShadow(false);

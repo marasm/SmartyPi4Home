@@ -17,7 +17,7 @@ public class DeviceController
 {
   private final RfTransmitter transmitter;
   
-  private final List<RfOutlet> allAvailableDevices = new ArrayList<>();
+  private final List<GenericRfDevice> allAvailableDevices = new ArrayList<>();
   
   public DeviceController(RfTransmitter inTransmitter)
   {
@@ -33,14 +33,14 @@ public class DeviceController
     allAvailableDevices.add(new RfOutlet("bedroom-outlet-3", "Bedroom #3", Protocol.ONE, 4527875, 4527884));
   }
 
-  public List<RfOutlet> getAllAvailableDevices()
+  public List<GenericRfDevice> getAllAvailableDevices()
   {
     Collections.sort(allAvailableDevices);
     
     return allAvailableDevices;
   }
   
-  public RfOutlet getDeviceById(String inId)
+  public GenericRfDevice getDeviceById(String inId)
   {
     return allAvailableDevices.stream()
       .filter( d -> d.getId().equals(inId))
@@ -48,17 +48,21 @@ public class DeviceController
       .get();
   }
   
-  public synchronized void updatedPhysicalDeviceState(RfOutlet inDevice)  
+  public synchronized void updatedPhysicalDeviceState(GenericRfDevice inDevice)  
   {
-    if (inDevice.getStatus() == DeviceStatus.ON)
+    if (inDevice instanceof RfOutlet)
     {
-      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOnCode());
+      RfOutlet outlet = (RfOutlet)inDevice;
+      if (inDevice.getStatus() == DeviceStatus.ON)
+      {
+        transmitter.sendCode(outlet.getProtocol(), outlet.getOnCode());
+      }
+      else
+      {
+        transmitter.sendCode(outlet.getProtocol(), outlet.getOffCode());
+      }
     }
-    else
-    {
-      transmitter.sendCode(inDevice.getProtocol(), inDevice.getOffCode());
-    }
-    
+    //TODO handle other devices
   }
   
   
