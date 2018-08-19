@@ -13,6 +13,7 @@ import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
 import com.marasm.smartyPi4Home.types.DeviceStatus;
 import com.marasm.smartyPi4Home.util.AppProperties;
+import com.pi4j.system.NetworkInfo;
 
 /**
  * @author mkorotkovas
@@ -30,6 +31,8 @@ public class MenuController
   public MenuController(LCD inLcd, DeviceController inDeviceController) 
     throws InterruptedException, IOException
   {
+    String ipAddress = NetworkInfo.getIPAddress();
+
     lcd = inLcd;
     deviceController = inDeviceController;
     curSiblingItems = new ArrayList<>();
@@ -39,7 +42,7 @@ public class MenuController
     curSiblingItems.add(new MenuItem("SmartyPi4Home\nv" + appVersion,
       () -> 
         {
-          lcd.setText("SmartyPi4Home\nStatus: OK");
+          lcd.setText("IP Address:\n" + ipAddress);
           sleep(2000);
           showCurMenuItem();
         }, 

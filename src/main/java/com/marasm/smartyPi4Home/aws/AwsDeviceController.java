@@ -10,6 +10,7 @@ import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.aws.AwsConfigUtil.KeyStorePasswordPair;
+import com.marasm.smartyPi4Home.rfdevice.GenericRfDevice;
 import com.marasm.smartyPi4Home.rfdevice.DeviceController;
 import com.marasm.smartyPi4Home.rfdevice.DeviceUpdateListener;
 import com.marasm.smartyPi4Home.rfdevice.RfOutlet;
@@ -74,7 +75,7 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
   }
 
   @Override
-  public synchronized void onPhysicalDeviceUpdate(RfOutlet inDevice)
+  public synchronized void onPhysicalDeviceUpdate(GenericRfDevice inDevice)
   {
     AppLogger.debug(
       "Physical device update received: " + inDevice.getName() + ", Status=" + inDevice.getStatus());
@@ -104,7 +105,7 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     }
     try
     {
-      RfOutlet device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
+      GenericRfDevice device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
       device.setStatusNoNotification(inAwsDevice.getStatus());
       physicalDeviceController.updatedPhysicalDeviceState(device);
       inAwsDevice.updateReportedShadow(false);

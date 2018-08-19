@@ -9,5 +9,5 @@ package com.marasm.smartyPi4Home.rfdevice;
  */
 public interface DeviceUpdateListener
 {
-  public void onPhysicalDeviceUpdate(RfOutlet inDevice);
+  public void onPhysicalDeviceUpdate(GenericRfDevice inDevice);
 }
