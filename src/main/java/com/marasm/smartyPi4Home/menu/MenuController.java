@@ -31,7 +31,7 @@ public class MenuController
   public MenuController(LCD inLcd, DeviceController inDeviceController) 
     throws InterruptedException, IOException
   {
-    String ipAddress = NetworkInfo.getIPAddress();
+    String ipAddress = NetworkInfo.getIPAddresses()[0];
 
     lcd = inLcd;
     deviceController = inDeviceController;
