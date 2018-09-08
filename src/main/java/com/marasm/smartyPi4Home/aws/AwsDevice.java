@@ -38,7 +38,7 @@ public class AwsDevice extends AWSIotDevice
   
   public void updateReportedShadow(DeviceStatus inDeviceStatus, boolean inOverrideDesired)
   {
-    String payload = "{\"state\": {\"reported\": {\"status\": \"" + inDeviceStatus + "\"}}}";
+    String payload = "{\"state\": {\"reported\": {\"status\": \"" + DeviceStatus.UNKNOWN + "\"}}}";
     if (inOverrideDesired)
     {
       payload = 

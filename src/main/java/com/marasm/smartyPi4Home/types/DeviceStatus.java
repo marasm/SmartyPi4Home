@@ -16,5 +16,6 @@ public enum DeviceStatus
   ON_MODE_4,
   ON_MODE_5,
   ON_MODE_6,
-  OFF
+  OFF,
+  UNKNOWN
 }
