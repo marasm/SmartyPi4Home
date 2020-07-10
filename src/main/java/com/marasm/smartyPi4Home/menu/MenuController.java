@@ -31,7 +31,7 @@ public class MenuController
   public MenuController(LCD inLcd, DeviceController inDeviceController) 
     throws InterruptedException, IOException
   {
-    String ipAddress = NetworkInfo.getIPAddresses()[0];
+    String ipAddress = getIpAddress();
 
     lcd = inLcd;
     deviceController = inDeviceController;
@@ -56,6 +56,7 @@ public class MenuController
     
     showCurMenuItem();
   }
+
   
   public void handleButtonEvents(Button inPressedButton)
   {
@@ -81,6 +82,15 @@ public class MenuController
       default:
         break;
     }
+  }
+
+  
+  private String getIpAddress() throws IOException, InterruptedException
+  {
+    String ipAddress = "unknown";
+    if(NetworkInfo.getIPAddresses() != null && NetworkInfo.getIPAddresses().length > 0)
+      ipAddress = NetworkInfo.getIPAddresses()[0];
+    return ipAddress;
   }
   
   private void showParentMenu()
