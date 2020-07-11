@@ -26,4 +26,21 @@ gpio mode 12 down
 gpio mode 13 down
 gpio mode 14 down
 
+
+gpio write 1  0
+gpio write 4  0
+gpio write 5  0
+gpio write 6  0
+gpio write 10 0
+
+gpio write 7  0
+gpio write 0  0
+gpio write 2  0
+gpio write 3  0
+gpio write 12 0
+gpio write 13 0
+gpio write 14 0
+
+
+
 echo "GPIO Pins reset"
