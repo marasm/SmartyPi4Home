@@ -4,6 +4,3 @@
 [submodule "Common"]
 	path = Common
 	url = git@github.com:marasm/Common.git
-[submodule "rfoutlet"]
-	path = rfoutlet
-	url = git@github.com:marasm/rfoutlet.git
