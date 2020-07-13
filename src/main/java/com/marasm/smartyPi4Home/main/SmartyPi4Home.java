@@ -9,9 +9,10 @@ import com.marasm.lcd4pi.ButtonPressedObserver;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.aws.AwsDeviceController;
+import com.marasm.smartyPi4Home.gpiodevice.GpioDeviceController;
+import com.marasm.smartyPi4Home.gpiodevice.LoggingGpioController;
 import com.marasm.smartyPi4Home.menu.MenuController;
-import com.marasm.smartyPi4Home.rfdevice.DeviceController;
-import com.marasm.smartyPi4Home.rfdevice.RfTransmitter;
+import com.pi4j.io.gpio.GpioFactory;
 
 /**
  * @author mkorotkovas
@@ -32,8 +33,16 @@ public class SmartyPi4Home
     {
       lcd = LCD.getInstance();
       
-      RfTransmitter transmitter = new RfTransmitter();
-      DeviceController deviceController = new DeviceController(transmitter);
+      GpioDeviceController deviceController;
+      if(LCD.isRunningOnPi())
+      {
+        deviceController = new GpioDeviceController(GpioFactory.getInstance());
+      }
+      else
+      {
+        deviceController = new GpioDeviceController(new LoggingGpioController());
+      }
+      
       
       lcd.clear();
       lcd.setText("Connecting to\nAWS...");

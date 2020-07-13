@@ -5,6 +5,8 @@ package com.marasm.smartyPi4Home.gpiodevice;
 
 import java.util.List;
 
+import com.marasm.smartyPi4Home.aws.AwsDevice;
+import com.marasm.smartyPi4Home.aws.AwsDeviceStatus;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -14,46 +16,56 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class FanGpioDevice extends BaseGpioDevice
 {
-  private final Pin mode1Pin = RaspiPin.GPIO_00;
-  private final Pin mode2Pin = RaspiPin.GPIO_00;
-  private final Pin mode3Pin = RaspiPin.GPIO_00;
-  private final Pin mode4Pin = RaspiPin.GPIO_00;
-  private final Pin mode5Pin = RaspiPin.GPIO_00;
-  private final Pin mode6Pin = RaspiPin.GPIO_00;
+  private final List<Pin> modePins = List.of(RaspiPin.GPIO_00, 
+                                             RaspiPin.GPIO_02, 
+                                             RaspiPin.GPIO_03, 
+                                             RaspiPin.GPIO_12, 
+                                             RaspiPin.GPIO_13, 
+                                             RaspiPin.GPIO_14);
+  
   
   public FanGpioDevice(String inId, List<Pin> inDevicePickerPins)
   {
     super(inId, inDevicePickerPins);
   }
 
-  public Pin getMode1Pin()
+  public List<Pin> getModePins()
   {
-    return mode1Pin;
+    return modePins;
   }
 
-  public Pin getMode2Pin()
+  @Override
+  public void updateDeviceStateWithAwsData(AwsDevice inAwsUpdates)
   {
-    return mode2Pin;
+    if (inAwsUpdates.getStatus() == AwsDeviceStatus.ON || inAwsUpdates.getLevel() > 0)
+    {
+      deviceState = "ON";
+      if (inAwsUpdates.getLevel() == 0)
+      {
+        stateActivationPin = modePins.get(2);
+        deviceState += "\nPower 50%";
+      }
+      else
+      {
+        int requestedLevel = inAwsUpdates.getLevel();
+        if (requestedLevel > 100) requestedLevel = 100;
+        stateActivationPin = modePins.get(Double.valueOf(Math.ceil(requestedLevel /16.67)).intValue() - 1);
+        deviceState += "\nPower " + requestedLevel + "%";
+      }
+    }
+    else
+    {
+      stateActivationPin = getOffPin();
+      deviceState = "OFF";
+    }
   }
 
-  public Pin getMode3Pin()
+  @Override
+  protected Pin getOffPin()
   {
-    return mode3Pin;
+    return RaspiPin.GPIO_07;
   }
 
-  public Pin getMode4Pin()
-  {
-    return mode4Pin;
-  }
 
-  public Pin getMode5Pin()
-  {
-    return mode5Pin;
-  }
-
-  public Pin getMode6Pin()
-  {
-    return mode6Pin;
-  }
   
 }

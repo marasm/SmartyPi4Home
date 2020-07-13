@@ -10,7 +10,6 @@ import com.amazonaws.services.iot.client.AWSIotDevice;
 import com.amazonaws.services.iot.client.AWSIotDeviceProperty;
 import com.amazonaws.services.iot.client.AWSIotMessage;
 import com.marasm.logger.AppLogger;
-import com.marasm.smartyPi4Home.types.DeviceStatus;
 
 /**
  * @author mkorotkovas
@@ -19,16 +18,18 @@ import com.marasm.smartyPi4Home.types.DeviceStatus;
 public class AwsDevice extends AWSIotDevice
 {
   @AWSIotDeviceProperty(enableReport=false, allowUpdate=true)
-  private DeviceStatus status = DeviceStatus.OFF;
+  private AwsDeviceStatus status = AwsDeviceStatus.OFF;
+
+  @AWSIotDeviceProperty(enableReport=false, allowUpdate=true)
+  private int level = 0;
   
   private List<AwsDeviceUpdateListener> awsDeviceUpdateListenerList;
 
   
-  public AwsDevice(String inThingName, DeviceStatus inInitDeviceStatus)
+  public AwsDevice(String inThingName)
   {
     super(inThingName);
     awsDeviceUpdateListenerList = new ArrayList<>();
-    status = inInitDeviceStatus;
   }
   
   public void addAwsDeviceUpdateListener(AwsDeviceUpdateListener inAwsDeviceUpdateListener)
@@ -36,14 +37,16 @@ public class AwsDevice extends AWSIotDevice
     awsDeviceUpdateListenerList.add(inAwsDeviceUpdateListener);
   }
   
-  public void updateReportedShadow(DeviceStatus inDeviceStatus, boolean inOverrideDesired)
+  public void updateReportedShadow(AwsDeviceStatus inDeviceStatus, boolean inOverrideDesired)
   {
-    String payload = "{\"state\": {\"reported\": {\"status\": \"" + DeviceStatus.UNKNOWN + "\"}}}";
+    String payload = "{\"state\": {\"reported\": {\"status\": \"" + AwsDeviceStatus.UNKNOWN + "\","
+                   + "                            \"level\": 0}}}";
     if (inOverrideDesired)
     {
       payload = 
         "{\"state\": {"
-         + "\"reported\": {\"status\": \"" + inDeviceStatus + "\"},"
+         + "\"reported\": {\"status\": \"" + inDeviceStatus + "\","
+         + "               \"level\": 0},"
          + "\"desired\": null"
         + "}}";
     }
@@ -65,12 +68,12 @@ public class AwsDevice extends AWSIotDevice
     updateReportedShadow(getStatus(), inOverrideDesired);
   }
 
-  public DeviceStatus getStatus()
+  public AwsDeviceStatus getStatus()
   {
     return status;
   }
 
-  public void setStatus(DeviceStatus inStatus)
+  public void setStatus(AwsDeviceStatus inStatus)
   {
     if (inStatus != status)
     {
@@ -79,7 +82,7 @@ public class AwsDevice extends AWSIotDevice
     }
   }
 
-  public void setStatusNoNotification(DeviceStatus inStatus)
+  public void setStatusNoNotification(AwsDeviceStatus inStatus)
   {
     AppLogger.debug("SetStatus NoN called. instatus=" + inStatus + ", Status=" + status);
     status = inStatus;
@@ -88,6 +91,17 @@ public class AwsDevice extends AWSIotDevice
   private  void notifyUpdateListeners()
   {
     awsDeviceUpdateListenerList.forEach(l -> l.onAwsDeviceShadowUpdate(this));
+  }
+
+  public int getLevel()
+  {
+    return level;
+  }
+
+  public void setLevel(int inLevel)
+  {
+    level = inLevel;
+    notifyUpdateListeners();
   }
 
 }

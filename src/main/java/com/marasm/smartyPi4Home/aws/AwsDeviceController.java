@@ -10,21 +10,18 @@ import com.amazonaws.services.iot.client.AWSIotException;
 import com.amazonaws.services.iot.client.AWSIotMqttClient;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.aws.AwsConfigUtil.KeyStorePasswordPair;
-import com.marasm.smartyPi4Home.rfdevice.GenericRfDevice;
-import com.marasm.smartyPi4Home.rfdevice.DeviceController;
-import com.marasm.smartyPi4Home.rfdevice.DeviceUpdateListener;
-import com.marasm.smartyPi4Home.rfdevice.RfOutlet;
-import com.marasm.smartyPi4Home.types.DeviceStatus;
+import com.marasm.smartyPi4Home.gpiodevice.BaseGpioDevice;
+import com.marasm.smartyPi4Home.gpiodevice.GpioDeviceController;
 
 /**
  * @author mkorotkovas
  *
  */
-public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdateListener
+public class AwsDeviceController implements AwsDeviceUpdateListener
 {
   private AWSIotMqttClient client;
   private List<AwsDevice> awsDeviceList;
-  private DeviceController physicalDeviceController;
+  private GpioDeviceController physicalDeviceController;
 
   public AwsDeviceController()
   {
@@ -40,16 +37,15 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     awsDeviceList = new ArrayList<>();
   }
   
-  public void connectPhysicalDevices(DeviceController inDevController) throws AWSIotException
+  public void connectPhysicalDevices(GpioDeviceController inDevController) throws AWSIotException
   {
     physicalDeviceController = inDevController;
     physicalDeviceController.getAllAvailableDevices().forEach(d -> {
       try
       {
-        AwsDevice awsDevice = new AwsDevice(d.getId(), d.getStatus());
+        AwsDevice awsDevice = new AwsDevice(d.getId());
         client.attach(awsDevice);
         awsDeviceList.add(awsDevice);
-        d.addDeviceUpdateListener(this);
         awsDevice.addAwsDeviceUpdateListener(this);
       }
       catch (AWSIotException e)
@@ -65,7 +61,7 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     {
       try
       {
-        d.updateReportedShadow(DeviceStatus.OFF, true);
+        d.updateReportedShadow(AwsDeviceStatus.OFF, true);
       }
       catch (Exception e)
       {
@@ -74,23 +70,7 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     });
   }
 
-  @Override
-  public synchronized void onPhysicalDeviceUpdate(GenericRfDevice inDevice)
-  {
-    AppLogger.debug(
-      "Physical device update received: " + inDevice.getName() + ", Status=" + inDevice.getStatus());
-    
-    try
-    {
-      AwsDevice awsDevice = getAwsDeviceByThingName(inDevice.getId());
-      awsDevice.setStatusNoNotification(inDevice.getStatus());
-      awsDevice.updateReportedShadow(true);
-    }
-    catch(Exception e)
-    {
-      throw new RuntimeException(e);
-    }
-  }
+  
 
   @Override
   public synchronized void onAwsDeviceShadowUpdate(AwsDevice inAwsDevice)
@@ -105,9 +85,9 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     }
     try
     {
-      GenericRfDevice device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
-      device.setStatusNoNotification(inAwsDevice.getStatus());
-      physicalDeviceController.updatedPhysicalDeviceState(device);
+      BaseGpioDevice device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
+      device.updateDeviceStateWithAwsData(inAwsDevice);
+      physicalDeviceController.updatePhysicalDeviceState(device);
       inAwsDevice.updateReportedShadow(false);
     }
     catch(Exception e)
@@ -116,14 +96,6 @@ public class AwsDeviceController implements DeviceUpdateListener, AwsDeviceUpdat
     }
   }
   
-  private AwsDevice getAwsDeviceByThingName(String inThingName)
-  {
-    AwsDevice awsDevice = awsDeviceList.stream()
-      .filter(ad -> ad.getThingName().equals(inThingName))
-      .findFirst()
-      .get();
-    return awsDevice;
-  }
 
   public void diconnect() 
   {

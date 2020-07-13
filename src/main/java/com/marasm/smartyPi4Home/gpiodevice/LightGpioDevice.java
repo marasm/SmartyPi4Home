@@ -5,6 +5,8 @@ package com.marasm.smartyPi4Home.gpiodevice;
 
 import java.util.List;
 
+import com.marasm.smartyPi4Home.aws.AwsDevice;
+import com.marasm.smartyPi4Home.aws.AwsDeviceStatus;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -14,20 +16,35 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class LightGpioDevice extends BaseGpioDevice
 {
-  
-  private final Pin onPin = RaspiPin.GPIO_00;
-
 
   public LightGpioDevice(String inId, List<Pin> inDevicePickerPins)
   {
     super(inId, inDevicePickerPins);
   }
 
-
   public Pin getOnPin()
   {
-    return onPin;
+    return RaspiPin.GPIO_10;
   }
 
+  @Override
+  protected Pin getOffPin()
+  {
+    return RaspiPin.GPIO_10;
+  }
+
+  @Override
+  public void updateDeviceStateWithAwsData(AwsDevice inAwsUpdates)
+  {
+    deviceState = inAwsUpdates.getStatus().toString();
+    if(inAwsUpdates.getStatus() == AwsDeviceStatus.ON)
+    {
+      stateActivationPin = getOnPin();
+    }
+    else
+    {
+      stateActivationPin = getOffPin();
+    }
+  }
   
 }

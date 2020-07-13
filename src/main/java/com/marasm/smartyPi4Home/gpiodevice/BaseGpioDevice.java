@@ -5,8 +5,8 @@ package com.marasm.smartyPi4Home.gpiodevice;
 
 import java.util.List;
 
+import com.marasm.smartyPi4Home.aws.AwsDevice;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 
 /**
  * @author mkorotkovas
@@ -16,7 +16,10 @@ public abstract class BaseGpioDevice
 {
   protected final String id;
   protected final List<Pin> devicePickerPins;
-  protected final Pin offPÍin  = RaspiPin.GPIO_00;
+  
+  
+  protected String deviceState = "OFF";
+  protected Pin stateActivationPin = getOffPin();
   
   public BaseGpioDevice(String inId, List<Pin> inDevicePickerPins)
   {
@@ -25,10 +28,8 @@ public abstract class BaseGpioDevice
     devicePickerPins = inDevicePickerPins;
   }
 
-  public Pin getOffPÍin()
-  {
-    return offPÍin;
-  }
+  protected abstract Pin getOffPin();
+  
   public List<Pin> getDevicePickerPins()
   {
     return devicePickerPins;
@@ -37,5 +38,18 @@ public abstract class BaseGpioDevice
   public String getId()
   {
     return id;
+  }
+
+  public abstract void updateDeviceStateWithAwsData(AwsDevice inAwsUpdates);
+  
+
+  public String getDeviceState()
+  {
+    return deviceState;
+  }
+
+  public Pin getStateActivationPin()
+  {
+    return stateActivationPin;
   }
 }

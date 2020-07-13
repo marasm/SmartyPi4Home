@@ -10,8 +10,7 @@ import java.util.List;
 import com.marasm.lcd4pi.Button;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
-import com.marasm.smartyPi4Home.rfdevice.DeviceController;
-import com.marasm.smartyPi4Home.types.DeviceStatus;
+import com.marasm.smartyPi4Home.gpiodevice.GpioDeviceController;
 import com.marasm.smartyPi4Home.util.AppProperties;
 import com.pi4j.system.NetworkInfo;
 
@@ -22,13 +21,13 @@ import com.pi4j.system.NetworkInfo;
 public class MenuController
 {
   private final LCD lcd;
-  private final DeviceController deviceController;
+  private final GpioDeviceController deviceController;
   
   private MenuItem curMenuItem;
   private List<MenuItem> curSiblingItems;
   private List<MenuItem> parentMenuItems;
   
-  public MenuController(LCD inLcd, DeviceController inDeviceController) 
+  public MenuController(LCD inLcd, GpioDeviceController inDeviceController) 
     throws InterruptedException, IOException
   {
     String ipAddress = getIpAddress();
@@ -48,7 +47,7 @@ public class MenuController
         }, 
       null));
     
-    curSiblingItems.add(new MenuItem("Device Control",
+    curSiblingItems.add(new MenuItem("Device State",
       () -> showChildMenu4CurItem(),
       createMenuItemsFromAvailableDevices( deviceController)));
     
@@ -164,31 +163,19 @@ public class MenuController
   }
 
   private List<MenuItem> createMenuItemsFromAvailableDevices(
-    DeviceController inDevController)
+    GpioDeviceController inDevController)
   {
     List<MenuItem> deviceMenuItems = new ArrayList<>();
     
-    inDevController.getAllAvailableDevices().forEach( (device) -> 
-    {
-      deviceMenuItems.add(new MenuItem( device.getName(), 
-        () -> 
-          {
-            lcd.clear();
-            if (device.getStatus() == DeviceStatus.ON)
-            { 
-              device.setStatus(DeviceStatus.OFF);
-              inDevController.updatedPhysicalDeviceState(device);
-              lcd.setText(device.getName() + "\nOff");
-            }
-            else
-            {
-              device.setStatus(DeviceStatus.ON);
-              inDevController.updatedPhysicalDeviceState(device);
-              lcd.setText(device.getName() + "\n On");
-            }
-          }, 
-        null));
-    });
+    inDevController.getAllAvailableDevices()
+      .forEach( (device) -> 
+        deviceMenuItems.add(new MenuItem( device.getId() + "\nenter for status", 
+          () -> 
+           {
+             lcd.clear();
+             lcd.setText(device.getId() + " " + inDevController.getDeviceById(device.getId()).getDeviceState());
+           }
+        , null)));
     return deviceMenuItems;
   }
 
