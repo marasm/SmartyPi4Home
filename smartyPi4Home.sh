@@ -8,4 +8,5 @@ git pull
 git submodule update --recursive --checkout --force --init
 
 echo Launching...
-nohup gradle execute > /dev/null 2>&1 &
+gradle execute
+#nohup gradle execute > /dev/null 2>&1 &

@@ -4,6 +4,7 @@
 package com.marasm.smartyPi4Home.gpiodevice;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class GpioDeviceController
 {
-  private final List<Pin> ALL_UTILIZED_OUTPUT_PINS = List.of(
+  private final List<Pin> ALL_UTILIZED_OUTPUT_PINS = Arrays.asList(
     RaspiPin.GPIO_00,
     RaspiPin.GPIO_01,
     RaspiPin.GPIO_02,
@@ -41,11 +42,11 @@ public class GpioDeviceController
   public GpioDeviceController(GpioController inGpioController)
   {
     super();
-    allAvailableDevices.add(new LightGpioDevice("office-light", List.of(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
-    allAvailableDevices.add(  new FanGpioDevice("office-fan",   List.of(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
-    allAvailableDevices.add(  new FanGpioDevice("bedroom-fan",  List.of(RaspiPin.GPIO_01, RaspiPin.GPIO_04, 
-                                                                        RaspiPin.GPIO_05, RaspiPin.GPIO_06)));
-    allAvailableDevices.add(  new FanGpioDevice("living-fan",   List.of(RaspiPin.GPIO_04, RaspiPin.GPIO_05)));
+    allAvailableDevices.add(new LightGpioDevice("office-light", Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
+    allAvailableDevices.add(  new FanGpioDevice("office-fan",   Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
+    allAvailableDevices.add(  new FanGpioDevice("bedroom-fan",  Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04, 
+                                                                              RaspiPin.GPIO_05, RaspiPin.GPIO_06)));
+    allAvailableDevices.add(  new FanGpioDevice("living-fan",   Arrays.asList(RaspiPin.GPIO_04, RaspiPin.GPIO_05)));
 
     gpioController = inGpioController;
     

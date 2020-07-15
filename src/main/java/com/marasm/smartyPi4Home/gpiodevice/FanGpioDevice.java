@@ -3,6 +3,7 @@
  */
 package com.marasm.smartyPi4Home.gpiodevice;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.marasm.smartyPi4Home.aws.AwsDevice;
@@ -16,12 +17,12 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class FanGpioDevice extends BaseGpioDevice
 {
-  private final List<Pin> modePins = List.of(RaspiPin.GPIO_00, 
-                                             RaspiPin.GPIO_02, 
-                                             RaspiPin.GPIO_03, 
-                                             RaspiPin.GPIO_12, 
-                                             RaspiPin.GPIO_13, 
-                                             RaspiPin.GPIO_14);
+  private final List<Pin> modePins = Arrays.asList(RaspiPin.GPIO_00, 
+                                                   RaspiPin.GPIO_02, 
+                                                   RaspiPin.GPIO_03, 
+                                                   RaspiPin.GPIO_12, 
+                                                   RaspiPin.GPIO_13, 
+                                                   RaspiPin.GPIO_14);
   
   
   public FanGpioDevice(String inId, List<Pin> inDevicePickerPins)

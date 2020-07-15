@@ -15,8 +15,8 @@ repositories {
 
 allprojects
 {
-  sourceCompatibility = 1.11
-  targetCompatibility = 1.11
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 }
 
 task execute(type:JavaExec) {
