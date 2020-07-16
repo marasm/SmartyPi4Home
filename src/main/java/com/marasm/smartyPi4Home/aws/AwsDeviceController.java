@@ -61,7 +61,8 @@ public class AwsDeviceController implements AwsDeviceUpdateListener
     {
       try
       {
-        d.updateReportedShadow(AwsDeviceStatus.OFF, true);
+        d.initializeValues();
+        d.updateReportedShadow();
       }
       catch (Exception e)
       {
@@ -76,7 +77,8 @@ public class AwsDeviceController implements AwsDeviceUpdateListener
   public synchronized void onAwsDeviceShadowUpdate(AwsDevice inAwsDevice)
   {
     AppLogger.debug(
-      "AWS device update received: " + inAwsDevice.getThingName() + ", Status=" + inAwsDevice.getStatus());
+      "AWS device update received: " + inAwsDevice.getThingName() + ", Status=" + inAwsDevice.getStatus() 
+      + " Level=" + inAwsDevice.getLevel());
     
     if (physicalDeviceController == null)
     {
@@ -88,7 +90,7 @@ public class AwsDeviceController implements AwsDeviceUpdateListener
       BaseGpioDevice device = physicalDeviceController.getDeviceById(inAwsDevice.getThingName());
       device.updateDeviceStateWithAwsData(inAwsDevice);
       physicalDeviceController.updatePhysicalDeviceState(device);
-      inAwsDevice.updateReportedShadow(false);
+      inAwsDevice.updateReportedShadow();
     }
     catch(Exception e)
     {

@@ -37,19 +37,13 @@ public class AwsDevice extends AWSIotDevice
     awsDeviceUpdateListenerList.add(inAwsDeviceUpdateListener);
   }
   
-  public void updateReportedShadow(AwsDeviceStatus inDeviceStatus, boolean inOverrideDesired)
+  public void updateReportedShadow()
   {
-    String payload = "{\"state\": {\"reported\": {\"status\": \"" + AwsDeviceStatus.UNKNOWN + "\","
-                   + "                            \"level\": 0}}}";
-    if (inOverrideDesired)
-    {
-      payload = 
+    String payload = 
         "{\"state\": {"
-         + "\"reported\": {\"status\": \"" + inDeviceStatus + "\","
-         + "               \"level\": 0},"
-         + "\"desired\": null"
+         + "\"reported\": {\"status\": \"" + getStatus() + "\","
+         + "               \"level\": " + getLevel() + "}"
         + "}}";
-    }
     
     try
     {
@@ -63,10 +57,7 @@ public class AwsDevice extends AWSIotDevice
     }
   }
   
-  public void updateReportedShadow(boolean inOverrideDesired)
-  {
-    updateReportedShadow(getStatus(), inOverrideDesired);
-  }
+  
 
   public AwsDeviceStatus getStatus()
   {
@@ -90,7 +81,13 @@ public class AwsDevice extends AWSIotDevice
   
   private  void notifyUpdateListeners()
   {
-    awsDeviceUpdateListenerList.forEach(l -> l.onAwsDeviceShadowUpdate(this));
+    //only notify if updates are valid
+    if ((status == AwsDeviceStatus.ON && level > 0) ||
+        (status == AwsDeviceStatus.OFF && level == 0))
+    {
+      awsDeviceUpdateListenerList.forEach(l -> l.onAwsDeviceShadowUpdate(this));
+    }
+    
   }
 
   public int getLevel()
@@ -102,6 +99,12 @@ public class AwsDevice extends AWSIotDevice
   {
     level = inLevel;
     notifyUpdateListeners();
+  }
+
+  public void initializeValues()
+  {
+    status = AwsDeviceStatus.OFF;
+    level = 0;
   }
 
 }
