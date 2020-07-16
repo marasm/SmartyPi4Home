@@ -44,14 +44,14 @@ public class FanGpioDevice extends BaseGpioDevice
       if (inAwsUpdates.getMode() == 0)
       {
         stateActivationPin = modePins.get(2);
-        deviceState += "\nLevel 3";
+        deviceState += "\nMode 3";
       }
       else
       {
-        int requestedLevel = inAwsUpdates.getMode();
-        if (requestedLevel > 6) requestedLevel = 6;
-        stateActivationPin = modePins.get(requestedLevel - 1);
-        deviceState += "\nLevel " + requestedLevel + "%";
+        int requestedMode = inAwsUpdates.getMode();
+        if (requestedMode > 6) requestedMode = 6;
+        stateActivationPin = modePins.get(requestedMode - 1);
+        deviceState += "\nMode " + requestedMode;
       }
     }
     else
