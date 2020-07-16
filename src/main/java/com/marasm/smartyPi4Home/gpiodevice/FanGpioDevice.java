@@ -50,7 +50,6 @@ public class FanGpioDevice extends BaseGpioDevice
       {
         int requestedLevel = inAwsUpdates.getMode();
         if (requestedLevel > 6) requestedLevel = 6;
-        if (requestedLevel < 1) requestedLevel = 1;
         stateActivationPin = modePins.get(requestedLevel - 1);
         deviceState += "\nLevel " + requestedLevel + "%";
       }
