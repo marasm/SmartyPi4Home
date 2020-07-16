@@ -78,7 +78,7 @@ public class AwsDeviceController implements AwsDeviceUpdateListener
   {
     AppLogger.debug(
       "AWS device update received: " + inAwsDevice.getThingName() + ", Status=" + inAwsDevice.getStatus() 
-      + " Level=" + inAwsDevice.getLevel());
+      + " Mode=" + inAwsDevice.getMode());
     
     if (physicalDeviceController == null)
     {

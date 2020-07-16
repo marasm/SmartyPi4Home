@@ -21,7 +21,7 @@ public class AwsDevice extends AWSIotDevice
   private AwsDeviceStatus status = AwsDeviceStatus.OFF;
 
   @AWSIotDeviceProperty(enableReport=false, allowUpdate=true)
-  private int level = 0;
+  private int mode = 0;
   
   private List<AwsDeviceUpdateListener> awsDeviceUpdateListenerList;
 
@@ -42,7 +42,7 @@ public class AwsDevice extends AWSIotDevice
     String payload = 
         "{\"state\": {"
          + "\"reported\": {\"status\": \"" + getStatus() + "\","
-         + "               \"level\": " + getLevel() + "}"
+         + "               \"mode\": " + getMode() + "}"
         + "}}";
     
     try
@@ -82,29 +82,29 @@ public class AwsDevice extends AWSIotDevice
   private  void notifyUpdateListeners()
   {
     //only notify if updates are valid
-    if ((status == AwsDeviceStatus.ON && level > 0) ||
-        (status == AwsDeviceStatus.OFF && level == 0))
+    if ((status == AwsDeviceStatus.ON && mode > 0) ||
+        (status == AwsDeviceStatus.OFF && mode == 0))
     {
       awsDeviceUpdateListenerList.forEach(l -> l.onAwsDeviceShadowUpdate(this));
     }
     
   }
 
-  public int getLevel()
+  public int getMode()
   {
-    return level;
+    return mode;
   }
 
-  public void setLevel(int inLevel)
+  public void setMode(int inMode)
   {
-    level = inLevel;
+    mode = inMode;
     notifyUpdateListeners();
   }
 
   public void initializeValues()
   {
     status = AwsDeviceStatus.OFF;
-    level = 0;
+    mode = 0;
   }
 
 }

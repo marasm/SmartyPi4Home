@@ -38,20 +38,21 @@ public class FanGpioDevice extends BaseGpioDevice
   @Override
   public void updateDeviceStateWithAwsData(AwsDevice inAwsUpdates)
   {
-    if (inAwsUpdates.getStatus() == AwsDeviceStatus.ON || inAwsUpdates.getLevel() > 0)
+    if (inAwsUpdates.getStatus() == AwsDeviceStatus.ON && inAwsUpdates.getMode() > 0)
     {
       deviceState = "ON";
-      if (inAwsUpdates.getLevel() == 0)
+      if (inAwsUpdates.getMode() == 0)
       {
         stateActivationPin = modePins.get(2);
-        deviceState += "\nPower 50%";
+        deviceState += "\nLevel 3";
       }
       else
       {
-        int requestedLevel = inAwsUpdates.getLevel();
-        if (requestedLevel > 100) requestedLevel = 100;
-        stateActivationPin = modePins.get(Double.valueOf(Math.ceil(requestedLevel /16.67)).intValue() - 1);
-        deviceState += "\nPower " + requestedLevel + "%";
+        int requestedLevel = inAwsUpdates.getMode();
+        if (requestedLevel > 6) requestedLevel = 6;
+        if (requestedLevel < 1) requestedLevel = 1;
+        stateActivationPin = modePins.get(requestedLevel - 1);
+        deviceState += "\nLevel " + requestedLevel + "%";
       }
     }
     else
