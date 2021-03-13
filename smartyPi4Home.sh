@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 
 echo Getting latest version from GitHub...
 git pull
-git submodule update --recursive --checkout --force --init
+git submodule update --recursive --checkout --force --init --remote
 
 echo Launching...
 #gradle execute
