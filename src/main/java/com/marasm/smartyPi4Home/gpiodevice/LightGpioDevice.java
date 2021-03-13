@@ -24,13 +24,13 @@ public class LightGpioDevice extends BaseGpioDevice
 
   public Pin getOnPin()
   {
-    return RaspiPin.GPIO_10;
+    return RaspiPin.GPIO_11;
   }
 
   @Override
   protected Pin getOffPin()
   {
-    return RaspiPin.GPIO_10;
+    return RaspiPin.GPIO_11;
   }
 
   @Override
