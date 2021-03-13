@@ -2,7 +2,7 @@ gpio mode 1 out
 gpio mode 4 out
 gpio mode 5 out
 gpio mode 6 out
-gpio mode 10 out
+gpio mode 11 out
 
 gpio mode 7 out
 gpio mode 0 out
@@ -16,7 +16,7 @@ gpio mode 1 down
 gpio mode 4 down
 gpio mode 5 down
 gpio mode 6 down
-gpio mode 10 down
+gpio mode 11 down
 
 gpio mode 7 down
 gpio mode 0 down
@@ -31,7 +31,7 @@ gpio write 1  0
 gpio write 4  0
 gpio write 5  0
 gpio write 6  0
-gpio write 10 0
+gpio write 11 0
 
 gpio write 7  0
 gpio write 0  0
