@@ -3,6 +3,7 @@
  */
 package com.marasm.smartyPi4Home.aws;
 
+
 /**
  * @author mkorotkovas
  *

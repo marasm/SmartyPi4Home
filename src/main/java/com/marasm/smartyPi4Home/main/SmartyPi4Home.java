@@ -8,10 +8,11 @@ import java.io.IOException;
 import com.marasm.lcd4pi.ButtonPressedObserver;
 import com.marasm.lcd4pi.LCD;
 import com.marasm.logger.AppLogger;
-import com.marasm.smartyPi4Home.aws.AwsDeviceController;
 import com.marasm.smartyPi4Home.gpiodevice.GpioDeviceController;
 import com.marasm.smartyPi4Home.gpiodevice.LoggingGpioController;
 import com.marasm.smartyPi4Home.menu.MenuController;
+import com.marasm.smartyPi4Home.mqtt.MqttDeviceController;
+import com.marasm.smartyPi4Home.aws.AwsDeviceController;
 import com.pi4j.io.gpio.GpioFactory;
 
 /**
@@ -22,6 +23,7 @@ public class SmartyPi4Home
 {
   private static LCD lcd;
   private static AwsDeviceController awsDeviceController;
+  private static MqttDeviceController mqttDeviceController;
   
 
   public static void main(String[] args) throws IOException, InterruptedException 
@@ -49,6 +51,9 @@ public class SmartyPi4Home
       
       awsDeviceController = new AwsDeviceController();
       awsDeviceController.connectPhysicalDevices(deviceController);
+
+      mqttDeviceController = new MqttDeviceController();
+      mqttDeviceController.connectPhysicalDevices(deviceController);
       
       MenuController menuCtrl = new MenuController(lcd, deviceController);
       ButtonPressedObserver buttonHandler = new ButtonPressedObserver(lcd);
@@ -62,28 +67,30 @@ public class SmartyPi4Home
           lcd.clear();
           lcd.stop();
           awsDeviceController.diconnect();
+          mqttDeviceController.diconnect();
         }
         ));
-      
-      //wait 
-      buttonCheckerThread.join();
-      
-
-      
-    }
-    catch (Exception e)
-    {
-      AppLogger.error("System Error: " + e.getMessage() + "\nStopping app...", e);
-      lcd.clear();
-      lcd.setText("System Error :(\nShutting down");
-      Thread.sleep(5000);
-      System.exit(1);
-    }
-    finally
-    {
-      awsDeviceController.diconnect();
-      lcd.stop();
-    }
+        
+        //wait 
+        buttonCheckerThread.join();
+        
+        
+        
+      }
+      catch (Exception e)
+      {
+        AppLogger.error("System Error: " + e.getMessage() + "\nStopping app...", e);
+        lcd.clear();
+        lcd.setText("System Error :(\nShutting down");
+        Thread.sleep(5000);
+        System.exit(1);
+      }
+      finally
+      {
+        awsDeviceController.diconnect();
+        mqttDeviceController.diconnect();
+        lcd.stop(); 
+      }
   }
   
 }

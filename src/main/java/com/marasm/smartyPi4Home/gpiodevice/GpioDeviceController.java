@@ -42,11 +42,15 @@ public class GpioDeviceController
   public GpioDeviceController(GpioController inGpioController)
   {
     super();
-    allAvailableDevices.add(new LightGpioDevice("office-light", Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
-    allAvailableDevices.add(  new FanGpioDevice("office-fan",   Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
-    allAvailableDevices.add(  new FanGpioDevice("bedroom-fan",  Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04, 
-                                                                              RaspiPin.GPIO_05, RaspiPin.GPIO_06)));
-    allAvailableDevices.add(  new FanGpioDevice("living-fan",   Arrays.asList(RaspiPin.GPIO_04, RaspiPin.GPIO_05)));
+    allAvailableDevices.add(new LightGpioDevice("office-light", "Office Light", "light", 
+        Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
+    allAvailableDevices.add(  new FanGpioDevice("office-fan", "Office Fan", "fan", 
+        Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
+    allAvailableDevices.add(  new FanGpioDevice("bedroom-fan", "Berdoom Fan", "fan", 
+        Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04, 
+                      RaspiPin.GPIO_05, RaspiPin.GPIO_06)));
+    allAvailableDevices.add(  new FanGpioDevice("living-fan", "Living Room Fan", "fan", 
+        Arrays.asList(RaspiPin.GPIO_04, RaspiPin.GPIO_05)));
 
     gpioController = inGpioController;
     
