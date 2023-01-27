@@ -5,9 +5,7 @@ package com.marasm.smartyPi4Home.gpiodevice;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.aws.AwsDevice;
 import com.marasm.smartyPi4Home.aws.AwsDeviceStatus;
