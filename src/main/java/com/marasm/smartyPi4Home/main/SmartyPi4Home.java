@@ -40,7 +40,7 @@ public class SmartyPi4Home
       GpioDeviceController deviceController;
       if(LCD.isRunningOnPi())
       {
-        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
+        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.DEFAULT_PIN_NUMBERING));
         deviceController = new GpioDeviceController(GpioFactory.getInstance());
       }
       else
