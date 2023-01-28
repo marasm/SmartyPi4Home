@@ -14,6 +14,8 @@ import com.marasm.smartyPi4Home.menu.MenuController;
 import com.marasm.smartyPi4Home.mqtt.MqttDeviceController;
 import com.marasm.smartyPi4Home.aws.AwsDeviceController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.RaspiGpioProvider;
+import com.pi4j.io.gpio.RaspiPinNumberingScheme;
 
 /**
  * @author mkorotkovas
@@ -38,6 +40,7 @@ public class SmartyPi4Home
       GpioDeviceController deviceController;
       if(LCD.isRunningOnPi())
       {
+        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
         deviceController = new GpioDeviceController(GpioFactory.getInstance());
       }
       else
