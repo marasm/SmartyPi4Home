@@ -30,7 +30,7 @@ public class GpioDeviceController
     RaspiPin.GPIO_05,
     RaspiPin.GPIO_06,
     RaspiPin.GPIO_07,
-    RaspiPin.GPIO_11,
+    // RaspiPin.GPIO_11,
     RaspiPin.GPIO_12,
     RaspiPin.GPIO_13,
     RaspiPin.GPIO_14);
