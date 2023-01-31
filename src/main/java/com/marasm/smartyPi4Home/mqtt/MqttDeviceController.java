@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marasm.logger.AppLogger;
 import com.marasm.smartyPi4Home.gpiodevice.BaseGpioDevice;
+import com.marasm.smartyPi4Home.gpiodevice.FanGpioDevice;
 import com.marasm.smartyPi4Home.gpiodevice.GpioDeviceController;
 
 /**
@@ -55,7 +56,7 @@ public class MqttDeviceController implements MqttCallback
       .forEach(d -> 
         {
           publishDeviceConfig(d);
-          updateMqttStateTopic(d);
+          updateMqttStateTopics(d);
         });
     
     //subscribe to all the command topics for all the devices
@@ -115,7 +116,7 @@ public class MqttDeviceController implements MqttCallback
       device.updateDeviceStateWithMqttData(new String(inMessage.getPayload()));
       physicalDeviceController.updatePhysicalDeviceState(device);
       //update the MQTT device status topic
-      updateMqttStateTopic(device);
+      updateMqttStateTopics(device);
     }
     catch(Exception e)
     {
@@ -131,11 +132,18 @@ public class MqttDeviceController implements MqttCallback
     AppLogger.debug("Delivery Complete: " + token);
   }
 
-  private void updateMqttStateTopic(BaseGpioDevice inDevice) 
+  private void updateMqttStateTopics(BaseGpioDevice inDevice) 
   {
     try
     {
       client.publish(inDevice.getStateTopicForDevice(), inDevice.getDeviceState().getBytes(), 1, false);
+      // for fan devices also update the percentage state topic
+      if (inDevice instanceof FanGpioDevice)
+      {
+        client.publish(inDevice.getBaseTopicForDevice() + "/percentage_state", 
+          ((FanGpioDevice)inDevice).getMode().getBytes(), 1, false);
+      }
+
     }
     catch (MqttException e)
     {

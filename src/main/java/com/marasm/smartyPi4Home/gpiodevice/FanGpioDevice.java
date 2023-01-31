@@ -20,7 +20,9 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class FanGpioDevice extends BaseGpioDevice
 {
-  
+  private String mode = "0";
+
+
   private final List<Pin> modePins = Arrays.asList(RaspiPin.GPIO_00, 
                                                    RaspiPin.GPIO_02, 
                                                    RaspiPin.GPIO_03, 
@@ -65,6 +67,17 @@ public class FanGpioDevice extends BaseGpioDevice
     }
   }
 
+  public String getMode()
+  {
+    return mode;
+  }
+
+
+  public void setMode(String mode)
+  {
+    this.mode = mode;
+  }
+
   @Override
   protected Pin getOffPin()
   {
@@ -82,11 +95,13 @@ public class FanGpioDevice extends BaseGpioDevice
         deviceState = "ON";
         //set to medium speed (3)
         stateActivationPin = modePins.get(2);
+        mode = "3";
       }
       else if ("OFF".equalsIgnoreCase(inCommand))
       {
         deviceState = "OFF";
         stateActivationPin = getOffPin();
+        mode = "0";
       }
       //percentage command contains just the speed value (not JSON)
       else
@@ -96,12 +111,14 @@ public class FanGpioDevice extends BaseGpioDevice
         {
           stateActivationPin = getOffPin();
           deviceState = "OFF";
+          mode = "0";
         }
         else
         {
           if(requestedSpeed > 6) requestedSpeed = 6;
           stateActivationPin = modePins.get(requestedSpeed - 1);
           deviceState = "ON";
+          mode = String.valueOf(requestedSpeed);
         }
       }
     }
