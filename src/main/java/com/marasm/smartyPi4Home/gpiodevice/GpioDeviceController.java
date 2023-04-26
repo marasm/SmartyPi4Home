@@ -42,8 +42,10 @@ public class GpioDeviceController
   public GpioDeviceController(GpioController inGpioController)
   {
     super();
-    allAvailableDevices.add(new LightGpioDevice("office-light", "Office Light", "light", 
-        Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
+    // removing office light since on and off is the same action and this causes the light to always 
+    // tunrn on when the SmartyPi starts which is annoying
+    // allAvailableDevices.add(new LightGpioDevice("office-light", "Office Light", "light", 
+    //     Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
     allAvailableDevices.add(  new FanGpioDevice("office-fan", "Office Fan", "fan", 
         Arrays.asList(RaspiPin.GPIO_01, RaspiPin.GPIO_04)));
     allAvailableDevices.add(  new FanGpioDevice("bedroom-fan", "Berdoom Fan", "fan", 
