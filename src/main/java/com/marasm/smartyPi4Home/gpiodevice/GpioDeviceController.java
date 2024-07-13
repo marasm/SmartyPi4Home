@@ -59,7 +59,7 @@ public class GpioDeviceController
     //provision and init all pins defined for devices
     ALL_UTILIZED_OUTPUT_PINS.stream()
       .forEach(p -> availableOutputPins.put(p, 
-        gpioController.provisionDigitalOutputPin(p, p.toString(), PinState.LOW)));
+        gpioController.provisionDigitalOutputPin(p, PinState.LOW)));
   }
 
   public List<BaseGpioDevice> getAllAvailableDevices()
