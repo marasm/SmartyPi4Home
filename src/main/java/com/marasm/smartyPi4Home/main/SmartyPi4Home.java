@@ -36,10 +36,12 @@ public class SmartyPi4Home
     try
     {
       lcd = LCD.getInstance();
+      AppLogger.debug("LCD Initialized");
       
       GpioDeviceController deviceController;
       if(LCD.isRunningOnPi())
       {
+        AppLogger.debug("Detected that we are running on PI. About to init GPIO controller.");
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.DEFAULT_PIN_NUMBERING));
         deviceController = new GpioDeviceController(GpioFactory.getInstance());
       }
@@ -47,21 +49,28 @@ public class SmartyPi4Home
       {
         deviceController = new GpioDeviceController(new LoggingGpioController());
       }
+      AppLogger.debug("GPIO controller initialized.");
       
       
+      AppLogger.debug("About to connect to AWS");
       lcd.clear();
       lcd.setText("Connecting to\nAWS...");
       
       awsDeviceController = new AwsDeviceController();
       awsDeviceController.connectPhysicalDevices(deviceController);
+      AppLogger.debug("AWS Connection success.");
 
+      AppLogger.debug("Connection to MQTT");
       mqttDeviceController = new MqttDeviceController();
       mqttDeviceController.connectPhysicalDevices(deviceController);
+      AppLogger.debug("MQTT Connection success.");
       
+      AppLogger.debug("Initializing the menu");
       MenuController menuCtrl = new MenuController(lcd, deviceController);
       ButtonPressedObserver buttonHandler = new ButtonPressedObserver(lcd);
       Thread buttonCheckerThread = buttonHandler.addButtonListener(
         button -> menuCtrl.handleButtonEvents(button));
+      AppLogger.debug("Menu init complete.");
       
       Runtime.getRuntime().addShutdownHook(
         new Thread(() -> 
@@ -75,9 +84,8 @@ public class SmartyPi4Home
         ));
         
         //wait 
+        AppLogger.debug("Joining button checker thread.");
         buttonCheckerThread.join();
-        
-        
         
       }
       catch (Exception e)
