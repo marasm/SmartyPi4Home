@@ -513,5 +513,33 @@ public class LoggingGpioPinDigitalOutput implements GpioPinDigitalOutput
     // TODO Auto-generated method stub
     
   }
+
+  @Override
+  public void pulseSync(long inDuration) throws InterruptedException
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void pulseSync(long inDuration, TimeUnit inTimeUnit) throws InterruptedException
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void pulseSync(long inDuration, PinState inPulseState) throws InterruptedException
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void pulseSync(long inDuration, PinState inPulseState, TimeUnit inTimeUnit) throws InterruptedException
+  {
+    // TODO Auto-generated method stub
+    
+  }
   
 }
